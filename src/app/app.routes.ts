@@ -6,6 +6,7 @@ export const routes: Routes = [
     path: '',
     component: Tabs,
     children: [
+      { path: 'inicio', loadComponent: () => import('./home/home').then((m) => m.Home) },
       { path: 'perfil', loadComponent: () => import('./profile/profile').then((m) => m.Profile) },
       {
         path: 'o-que-e',
@@ -15,7 +16,7 @@ export const routes: Routes = [
         path: 'urgencia',
         loadComponent: () => import('./emergency/emergency').then((m) => m.Emergency),
       },
-      { path: '', redirectTo: 'perfil', pathMatch: 'full' },
+      { path: '', redirectTo: 'inicio', pathMatch: 'full' },
     ],
   },
 ];

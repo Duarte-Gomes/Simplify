@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { cameraOutline, medkitOutline, personOutline } from 'ionicons/icons';
+import { cameraOutline, homeOutline, medkitOutline, personOutline } from 'ionicons/icons';
 
 @Component({
   imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
@@ -10,6 +10,6 @@ import { cameraOutline, medkitOutline, personOutline } from 'ionicons/icons';
 })
 export class Tabs {
   constructor() {
-    addIcons({ personOutline, cameraOutline, medkitOutline });
+    addIcons({ homeOutline, personOutline, cameraOutline, medkitOutline });
   }
 }

@@ -1,0 +1,26 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Início</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="home">
+    <h1>Bem-vindo ao Simplify</h1>
+    <ion-text color="medium">
+      <p>O que queres fazer hoje?</p>
+    </ion-text>
+
+    <ion-list inset>
+      @for (shortcut of shortcuts; track shortcut.link) {
+        <ion-item [routerLink]="shortcut.link" detail>
+          <ion-icon slot="start" color="primary" [name]="shortcut.icon" aria-hidden="true" />
+          <ion-label>
+            <h2>{{ shortcut.title }}</h2>
+            <p>{{ shortcut.description }}</p>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  </div>
+</ion-content>
