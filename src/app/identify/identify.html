@@ -1,0 +1,50 @@
+<section class="container py-4">
+  <h1 class="h3 mb-2">O que é?</h1>
+  <p class="text-body-secondary mb-4">
+    Tira uma foto (ou escolhe uma imagem) e o modelo tenta identificar o que lá está. A imagem é
+    analisada no teu dispositivo e não é enviada para nenhum servidor.
+  </p>
+
+  <label class="btn btn-primary mb-4">
+    Tirar foto
+    <input
+      type="file"
+      accept="image/*"
+      capture="environment"
+      class="d-none"
+      (change)="onFileSelected($event)"
+    />
+  </label>
+
+  @if (photoUrl(); as url) {
+    <div class="identify-result">
+      <img
+        #photo
+        [src]="url"
+        alt="Foto a identificar"
+        class="img-fluid rounded mb-3"
+        (load)="onPhotoLoaded()"
+      />
+
+      @if (loading()) {
+        <div class="d-flex align-items-center gap-2">
+          <div class="spinner-border spinner-border-sm" role="status"></div>
+          <span>A identificar…</span>
+        </div>
+      } @else if (error(); as message) {
+        <div class="alert alert-danger" role="alert">{{ message }}</div>
+      } @else {
+        <ul class="list-group">
+          @for (prediction of predictions(); track prediction.className) {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ prediction.className }}
+              <span class="badge text-bg-primary rounded-pill">
+                {{ (prediction.probability * 100).toFixed(0) }}%
+              </span>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  }
+</section>
