@@ -1,18 +1,38 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonTitle,
+  IonToolbar,
+  ToastController,
+} from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { addOutline, trashOutline } from 'ionicons/icons';
 
 const PHONE_PATTERN = /^\+?[0-9 ]{9,15}$/;
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [
+    ReactiveFormsModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonInput,
+    IonButton,
+    IonIcon,
+  ],
   selector: 'app-profile',
   styleUrl: './profile.scss',
   templateUrl: './profile.html',
 })
 export class Profile {
   private readonly fb = inject(FormBuilder);
-
-  protected readonly saved = signal(false);
+  private readonly toast = inject(ToastController);
 
   protected readonly form = this.fb.nonNullable.group({
     name: ['', Validators.required],
@@ -23,6 +43,10 @@ export class Profile {
     mobilePhone: ['', Validators.pattern(PHONE_PATTERN)],
     hobbies: this.fb.nonNullable.array([this.fb.nonNullable.control('')]),
   });
+
+  constructor() {
+    addIcons({ addOutline, trashOutline });
+  }
 
   protected get hobbies(): FormArray {
     return this.form.controls.hobbies;
@@ -36,12 +60,7 @@ export class Profile {
     this.hobbies.removeAt(index);
   }
 
-  protected isInvalid(name: keyof typeof this.form.controls): boolean {
-    const control = this.form.controls[name];
-    return control.invalid && (control.touched || control.dirty);
-  }
-
-  protected submit(): void {
+  protected async submit(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -51,6 +70,12 @@ export class Profile {
       ...value,
       hobbies: value.hobbies.map((h) => h.trim()).filter(Boolean),
     });
-    this.saved.set(true);
+    const toast = await this.toast.create({
+      message: 'Perfil guardado com sucesso.',
+      duration: 2000,
+      color: 'success',
+      position: 'top',
+    });
+    await toast.present();
   }
 }

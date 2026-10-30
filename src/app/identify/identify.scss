@@ -1,3 +1,27 @@
-.identify-result {
+.identify {
   max-width: 480px;
+  margin: 0 auto;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+img {
+  display: block;
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+ion-list {
+  margin-inline: 0;
 }

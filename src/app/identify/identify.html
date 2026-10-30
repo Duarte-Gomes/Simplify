@@ -1,50 +1,51 @@
-<section class="container py-4">
-  <h1 class="h3 mb-2">O que é?</h1>
-  <p class="text-body-secondary mb-4">
-    Tira uma foto (ou escolhe uma imagem) e o modelo tenta identificar o que lá está. A imagem é
-    analisada no teu dispositivo e não é enviada para nenhum servidor.
-  </p>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>O que é?</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-  <label class="btn btn-primary mb-4">
-    Tirar foto
-    <input
-      type="file"
-      accept="image/*"
-      capture="environment"
-      class="d-none"
-      (change)="onFileSelected($event)"
-    />
-  </label>
+<ion-content class="ion-padding">
+  <div class="identify">
+    <ion-text color="medium">
+      <p>
+        Tira uma foto ou escolhe uma imagem e o modelo tenta identificar o que lá está. A imagem é
+        analisada no teu dispositivo e não é enviada para nenhum servidor.
+      </p>
+    </ion-text>
 
-  @if (photoUrl(); as url) {
-    <div class="identify-result">
-      <img
-        #photo
-        [src]="url"
-        alt="Foto a identificar"
-        class="img-fluid rounded mb-3"
-        (load)="onPhotoLoaded()"
-      />
+    <div class="actions">
+      <ion-button (click)="takePhoto()">
+        <ion-icon slot="start" name="camera-outline" aria-hidden="true" />
+        Tirar foto
+      </ion-button>
+      <ion-button fill="outline" (click)="chooseFromGallery()">
+        <ion-icon slot="start" name="images-outline" aria-hidden="true" />
+        Galeria
+      </ion-button>
+    </div>
+
+    @if (photoUrl(); as url) {
+      <img #photo [src]="url" alt="Foto a identificar" (load)="onPhotoLoaded()" />
 
       @if (loading()) {
-        <div class="d-flex align-items-center gap-2">
-          <div class="spinner-border spinner-border-sm" role="status"></div>
+        <div class="status">
+          <ion-spinner name="crescent" />
           <span>A identificar…</span>
         </div>
       } @else if (error(); as message) {
-        <div class="alert alert-danger" role="alert">{{ message }}</div>
+        <ion-text color="danger">
+          <p>{{ message }}</p>
+        </ion-text>
       } @else {
-        <ul class="list-group">
+        <ion-list inset>
           @for (prediction of predictions(); track prediction.className) {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              {{ prediction.className }}
-              <span class="badge text-bg-primary rounded-pill">
-                {{ (prediction.probability * 100).toFixed(0) }}%
-              </span>
-            </li>
+            <ion-item>
+              <ion-label>{{ prediction.className }}</ion-label>
+              <ion-badge slot="end">{{ (prediction.probability * 100).toFixed(0) }}%</ion-badge>
+            </ion-item>
           }
-        </ul>
+        </ion-list>
       }
-    </div>
-  }
-</section>
+    }
+  </div>
+</ion-content>

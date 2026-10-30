@@ -1,98 +1,96 @@
-<section class="container py-4">
-  <h1 class="h3 mb-4">Perfil de utilizador</h1>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-  @if (saved()) {
-    <div class="alert alert-success" role="alert">Perfil guardado com sucesso.</div>
-  }
-
+<ion-content class="ion-padding">
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="profile-form">
-    <div class="mb-3">
-      <label for="name" class="form-label">Nome</label>
-      <input
-        id="name"
-        type="text"
-        class="form-control"
-        formControlName="name"
-        [class.is-invalid]="isInvalid('name')"
+    <ion-input
+      label="Nome"
+      labelPlacement="floating"
+      fill="outline"
+      formControlName="name"
+      autocomplete="name"
+      errorText="O nome é obrigatório."
+    />
+
+    <ion-input
+      label="Morada"
+      labelPlacement="floating"
+      fill="outline"
+      formControlName="address"
+      autocomplete="street-address"
+    />
+
+    <div class="row postal">
+      <ion-input
+        label="Código postal"
+        labelPlacement="floating"
+        fill="outline"
+        formControlName="postalCode"
+        placeholder="0000-000"
+        inputmode="numeric"
+        autocomplete="postal-code"
+        errorText="Formato: 0000-000."
       />
-      <div class="invalid-feedback">O nome é obrigatório.</div>
+      <ion-input
+        label="Localidade"
+        labelPlacement="floating"
+        fill="outline"
+        formControlName="locality"
+        autocomplete="address-level2"
+      />
     </div>
 
-    <div class="mb-3">
-      <label for="address" class="form-label">Morada</label>
-      <input id="address" type="text" class="form-control" formControlName="address" />
+    <div class="row phones">
+      <ion-input
+        label="Telefone de casa"
+        labelPlacement="floating"
+        fill="outline"
+        type="tel"
+        formControlName="homePhone"
+        errorText="Número de telefone inválido."
+      />
+      <ion-input
+        label="Telemóvel"
+        labelPlacement="floating"
+        fill="outline"
+        type="tel"
+        formControlName="mobilePhone"
+        autocomplete="tel"
+        errorText="Número de telemóvel inválido."
+      />
     </div>
 
-    <div class="row">
-      <div class="col-md-4 mb-3">
-        <label for="postalCode" class="form-label">Código postal</label>
-        <input
-          id="postalCode"
-          type="text"
-          class="form-control"
-          formControlName="postalCode"
-          placeholder="0000-000"
-          [class.is-invalid]="isInvalid('postalCode')"
-        />
-        <div class="invalid-feedback">Formato esperado: 0000-000.</div>
-      </div>
-      <div class="col-md-8 mb-3">
-        <label for="locality" class="form-label">Localidade</label>
-        <input id="locality" type="text" class="form-control" formControlName="locality" />
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label for="homePhone" class="form-label">Telefone de casa</label>
-        <input
-          id="homePhone"
-          type="tel"
-          class="form-control"
-          formControlName="homePhone"
-          [class.is-invalid]="isInvalid('homePhone')"
-        />
-        <div class="invalid-feedback">Número de telefone inválido.</div>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label for="mobilePhone" class="form-label">Telemóvel</label>
-        <input
-          id="mobilePhone"
-          type="tel"
-          class="form-control"
-          formControlName="mobilePhone"
-          [class.is-invalid]="isInvalid('mobilePhone')"
-        />
-        <div class="invalid-feedback">Número de telemóvel inválido.</div>
-      </div>
-    </div>
-
-    <fieldset class="mb-4" formArrayName="hobbies">
-      <legend class="form-label fs-6">Hobbies</legend>
+    <fieldset formArrayName="hobbies">
+      <legend>Hobbies</legend>
       @for (hobby of hobbies.controls; track hobby; let i = $index) {
-        <div class="input-group mb-2">
-          <input
-            type="text"
-            class="form-control"
-            [formControlName]="i"
-            [attr.aria-label]="'Hobby ' + (i + 1)"
-            placeholder="Ex.: Leitura"
-          />
-          <button
-            type="button"
-            class="btn btn-outline-danger"
+        <ion-input
+          [label]="'Hobby ' + (i + 1)"
+          labelPlacement="floating"
+          fill="outline"
+          [formControlName]="i"
+          placeholder="Ex.: Leitura"
+        >
+          <ion-button
+            slot="end"
+            fill="clear"
+            color="danger"
+            aria-label="Remover hobby"
             (click)="removeHobby(i)"
             [disabled]="hobbies.length === 1"
           >
-            Remover
-          </button>
-        </div>
+            <ion-icon slot="icon-only" name="trash-outline" aria-hidden="true" />
+          </ion-button>
+        </ion-input>
       }
-      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="addHobby()">
-        + Adicionar hobby
-      </button>
+      <ion-button fill="outline" size="small" (click)="addHobby()">
+        <ion-icon slot="start" name="add-outline" aria-hidden="true" />
+        Adicionar hobby
+      </ion-button>
     </fieldset>
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
+    <ion-button type="submit" expand="block">Guardar</ion-button>
   </form>
-</section>
+</ion-content>

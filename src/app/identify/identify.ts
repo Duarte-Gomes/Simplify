@@ -1,5 +1,22 @@
 import { Component, ElementRef, OnDestroy, signal, viewChild } from '@angular/core';
+import { Camera, MediaResult, MediaTypeSelection } from '@capacitor/camera';
 import type { MobileNet } from '@tensorflow-models/mobilenet';
+import {
+  IonBadge,
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonSpinner,
+  IonText,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { cameraOutline, imagesOutline } from 'ionicons/icons';
 
 interface Prediction {
   className: string;
@@ -7,6 +24,20 @@ interface Prediction {
 }
 
 @Component({
+  imports: [
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonButton,
+    IonIcon,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonBadge,
+    IonSpinner,
+    IonText,
+  ],
   selector: 'app-identify',
   styleUrl: './identify.scss',
   templateUrl: './identify.html',
@@ -21,16 +52,24 @@ export class Identify implements OnDestroy {
   protected readonly loading = signal(false);
   protected readonly error = signal<string | null>(null);
 
-  protected onFileSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) {
-      return;
-    }
-    this.revokePhoto();
-    this.predictions.set([]);
-    this.error.set(null);
-    this.loading.set(true);
-    this.photoUrl.set(URL.createObjectURL(file));
+  constructor() {
+    addIcons({ cameraOutline, imagesOutline });
+  }
+
+  protected async takePhoto(): Promise<void> {
+    await this.pick(() => Camera.takePhoto({ quality: 80, webUseInput: true }));
+  }
+
+  protected async chooseFromGallery(): Promise<void> {
+    await this.pick(async () => {
+      const { results } = await Camera.chooseFromGallery({
+        mediaType: MediaTypeSelection.Photo,
+        limit: 1,
+        quality: 80,
+        webUseInput: true,
+      });
+      return results[0];
+    });
   }
 
   protected async onPhotoLoaded(): Promise<void> {
@@ -49,6 +88,24 @@ export class Identify implements OnDestroy {
     this.revokePhoto();
   }
 
+  private async pick(source: () => Promise<MediaResult | undefined>): Promise<void> {
+    let photo: MediaResult | undefined;
+    try {
+      photo = await source();
+    } catch {
+      // O utilizador cancelou ou recusou a permissão.
+      return;
+    }
+    if (!photo?.webPath) {
+      return;
+    }
+    this.revokePhoto();
+    this.predictions.set([]);
+    this.error.set(null);
+    this.loading.set(true);
+    this.photoUrl.set(photo.webPath);
+  }
+
   // O TensorFlow.js só é descarregado quando é tirada a primeira foto.
   private loadModel(): Promise<MobileNet> {
     this.model ??= (async () => {
@@ -62,7 +119,7 @@ export class Identify implements OnDestroy {
 
   private revokePhoto(): void {
     const url = this.photoUrl();
-    if (url) {
+    if (url?.startsWith('blob:')) {
       URL.revokeObjectURL(url);
     }
   }

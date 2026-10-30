@@ -12,6 +12,20 @@ ng serve
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
+## Mobile (Android / iOS)
+
+The app uses [Ionic](https://ionicframework.com/docs/angular/overview) for the UI and
+[Capacitor](https://capacitorjs.com/docs) to package it as a native app.
+
+```bash
+npm run sync     # build the web app and copy it into android/ and ios/
+npm run android  # build, sync and open the project in Android Studio
+npm run ios      # build, sync and open the project in Xcode (macOS only)
+```
+
+Android requires [Android Studio](https://developer.android.com/studio); iOS requires Xcode.
+Run `npm run sync` after every web change you want to see in the native apps.
+
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
