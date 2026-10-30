@@ -12,8 +12,7 @@ import {
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { addOutline, trashOutline } from 'ionicons/icons';
-
-const PHONE_PATTERN = /^\+?[0-9 ]{9,15}$/;
+import { PHONE_PATTERN } from '../shared/patterns';
 
 @Component({
   imports: [

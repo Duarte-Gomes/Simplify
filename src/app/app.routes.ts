@@ -11,6 +11,10 @@ export const routes: Routes = [
         path: 'o-que-e',
         loadComponent: () => import('./identify/identify').then((m) => m.Identify),
       },
+      {
+        path: 'urgencia',
+        loadComponent: () => import('./emergency/emergency').then((m) => m.Emergency),
+      },
       { path: '', redirectTo: 'perfil', pathMatch: 'full' },
     ],
   },

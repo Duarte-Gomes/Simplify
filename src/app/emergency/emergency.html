@@ -1,0 +1,81 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Urgência</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="emergency-form">
+    <ng-container formArrayName="contacts">
+      @for (contact of contacts.controls; track contact; let i = $index) {
+        <ion-card [formGroupName]="i">
+          <ion-card-header>
+            @if (savedRelationships().get(contact); as relationship) {
+              <ion-card-title>{{ relationship }}</ion-card-title>
+            }
+            <ion-button
+              fill="clear"
+              color="danger"
+              size="small"
+              aria-label="Remover contacto"
+              (click)="removeContact(i)"
+              [disabled]="contacts.length === 1"
+            >
+              <ion-icon slot="icon-only" name="trash-outline" aria-hidden="true" />
+            </ion-button>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-select
+              label="Parentesco"
+              labelPlacement="floating"
+              fill="outline"
+              interface="action-sheet"
+              cancelText="Cancelar"
+              formControlName="relationship"
+              errorText="Indica o parentesco."
+            >
+              @for (relationship of relationships; track relationship) {
+                <ion-select-option [value]="relationship">{{ relationship }}</ion-select-option>
+              }
+            </ion-select>
+
+            <ion-input
+              label="Nome"
+              labelPlacement="floating"
+              fill="outline"
+              formControlName="name"
+              errorText="O nome é obrigatório."
+            />
+
+            <div class="phones">
+              <ion-input
+                label="Telemóvel"
+                labelPlacement="floating"
+                fill="outline"
+                type="tel"
+                formControlName="mobilePhone"
+                errorText="Indica um telemóvel válido."
+              />
+              <ion-input
+                label="Telefone de contacto"
+                labelPlacement="floating"
+                fill="outline"
+                type="tel"
+                formControlName="phone"
+                errorText="Número de telefone inválido."
+              />
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+    </ng-container>
+
+    <ion-button fill="outline" (click)="addContact()">
+      <ion-icon slot="start" name="add-outline" aria-hidden="true" />
+      Adicionar contacto
+    </ion-button>
+
+    <ion-button type="submit" expand="block">Guardar</ion-button>
+  </form>
+</ion-content>
